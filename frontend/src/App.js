@@ -1,61 +1,61 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
     BrowserRouter as Router,
-    Switch,
     Route,
-    Link,
 } from 'react-router-dom';
 import LandingPage from './components/views/LandingPage/LandingPage';
 import LoginPage from './components/views/LoginPage/LoginPage';
-import NavBar from './components/views/NavBar/NavBar';
 import RegisterPage from './components/views/RegisterPage/RegisterPage';
 import Auth from './hoc/auth';
-import styled from 'styled-components';
-import { Layout } from 'antd';
-
-const { Header, Footer, Sider, Content } = Layout;
-
-const ContentWrapper = styled(Content)`
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 50px;
-`;
+import { Row, Col } from 'antd';
+import 'antd/dist/antd.css';
+import Header from './components/views/Header/Header';
 
 function App() {
     return (
         <Router>
-            <Layout>
-                <Header>Header</Header>
-                <ContentWrapper
-                    style={{ minHeight: '80vh' }}
-                >
-                    <Route
-                        exact
-                        path="/"
-                        component={Auth(
-                            LandingPage,
-                            null
-                        )}
-                    ></Route>
-                    <Route
-                        exact
-                        path="/login"
-                        component={Auth(
-                            LoginPage,
-                            false
-                        )}
-                    ></Route>
-                    <Route
-                        exact
-                        path="/register"
-                        component={Auth(
-                            RegisterPage,
-                            false
-                        )}
-                    ></Route>
-                </ContentWrapper>
-            </Layout>
+            <Header />
+            <Row gutter={8}>
+                <Col xs={24} md={6}></Col>
+                <Col xs={24} md={12}>
+                    <div
+                        style={{
+                            display: 'flex',
+                            justifyContent:
+                                'center',
+                            alignItems: 'center',
+                            width: '100%',
+                            height: '80vh',
+                        }}
+                    >
+                        <Route
+                            exact
+                            path="/"
+                            component={Auth(
+                                LandingPage,
+                                null
+                            )}
+                        ></Route>
+                        <Route
+                            exact
+                            path="/login"
+                            component={Auth(
+                                LoginPage,
+                                false
+                            )}
+                        ></Route>
+                        <Route
+                            exact
+                            path="/register"
+                            component={Auth(
+                                RegisterPage,
+                                false
+                            )}
+                        ></Route>
+                    </div>
+                </Col>
+                <Col xs={24} md={6}></Col>
+            </Row>
         </Router>
     );
 }

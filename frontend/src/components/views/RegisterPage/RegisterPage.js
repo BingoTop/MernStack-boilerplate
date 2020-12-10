@@ -2,8 +2,41 @@ import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import { registerUser } from '../../../_actions/user_action';
+import {
+    Form,
+    Input,
+    Tooltip,
+    Checkbox,
+    Button,
+} from 'antd';
+import { QuestionCircleOutlined } from '@ant-design/icons';
 
 function RegisterPage(props) {
+    const formItemLayout = {
+        labelCol: {
+            xs: { span: 24 },
+            sm: { span: 8 },
+        },
+        wrapperCol: {
+            xs: { span: 24 },
+            sm: { span: 16 },
+        },
+    };
+    const tailFormItemLayout = {
+        wrapperCol: {
+            xs: {
+                span: 24,
+                offset: 0,
+            },
+            sm: {
+                span: 16,
+                offset: 8,
+            },
+        },
+    };
+
+    const [form] = Form.useForm();
+
     const dispatch = useDispatch();
     const [Email, setEmail] = useState('');
     const [Password, setPassword] = useState('');
@@ -28,7 +61,6 @@ function RegisterPage(props) {
     };
 
     const onSubmit = (e) => {
-        e.preventDefault();
         if (Password !== ConfirmPassword) {
             return alert(
                 '비밀번호를 확인해주십시오.'
@@ -40,7 +72,6 @@ function RegisterPage(props) {
             name: Name,
             password: Password,
         };
-
         dispatch(registerUser(body)).then(
             (res) => {
                 if (res.payload.success) {
@@ -52,54 +83,141 @@ function RegisterPage(props) {
         );
     };
     return (
-        <div
-            style={{
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center',
-                width: '100%',
-                height: '100vh',
-            }}
+        <Form
+            {...formItemLayout}
+            form={form}
+            name="register"
+            onFinish={onSubmit}
+            scrollToFirstError
         >
-            <form
-                style={{
-                    display: 'flex',
-                    flexDirection: 'column',
-                }}
-                onSubmit={onSubmit}
+            <Form.Item
+                name="email"
+                label="E-mail"
+                rules={[
+                    {
+                        type: 'email',
+                        message:
+                            'The input is not valid E-mail!',
+                    },
+                    {
+                        required: true,
+                        message:
+                            'Please input your E-mail!',
+                    },
+                ]}
             >
-                <label>Email</label>
-                <input
-                    type="Email"
+                <Input
                     value={Email}
                     onChange={onEmailHandler}
                 />
-                <label>Name</label>
-                <input
-                    type="text"
-                    value={Name}
-                    onChange={onNameHandler}
-                />
-                <label>Password</label>
-                <input
-                    type="Password"
-                    value={Password}
+            </Form.Item>
+
+            <Form.Item
+                name="password"
+                label="Password"
+                rules={[
+                    {
+                        required: true,
+                        message:
+                            'Please input your password!',
+                    },
+                ]}
+                hasFeedback
+            >
+                <Input.Password
                     onChange={onPasswordHandler}
+                    value={Password}
                 />
-                <label>ConfirmPassword</label>
-                <input
-                    type="Password"
-                    value={ConfirmPassword}
+            </Form.Item>
+            <Form.Item
+                name="confirm"
+                label="Confirm Password"
+                dependencies={['password']}
+                hasFeedback
+                rules={[
+                    {
+                        required: true,
+                        message:
+                            'Please confirm your password!',
+                    },
+                    ({ getFieldValue }) => ({
+                        validator(rule, value) {
+                            if (
+                                !value ||
+                                getFieldValue(
+                                    'password'
+                                ) === value
+                            ) {
+                                return Promise.resolve();
+                            }
+                            return Promise.reject(
+                                'The two passwords that you entered do not match!'
+                            );
+                        },
+                    }),
+                ]}
+            >
+                <Input.Password
                     onChange={
                         onConfirmPasswordHandler
                     }
+                    value={ConfirmPassword}
                 />
-                <br />
-                <button type="submit">
+            </Form.Item>
+
+            <Form.Item
+                name="nickname"
+                label={
+                    <span>
+                        Nickname
+                        <Tooltip title="What do you want others to call you?">
+                            <QuestionCircleOutlined />
+                        </Tooltip>
+                    </span>
+                }
+                rules={[
+                    {
+                        required: true,
+                        message:
+                            'Please input your nickname!',
+                        whitespace: true,
+                    },
+                ]}
+            >
+                <Input
+                    vaule={Name}
+                    onChange={onNameHandler}
+                />
+            </Form.Item>
+            <Form.Item
+                name="agreement"
+                valuePropName="checked"
+                rules={[
+                    {
+                        validator: (_, value) =>
+                            value
+                                ? Promise.resolve()
+                                : Promise.reject(
+                                      'Should accept agreement'
+                                  ),
+                    },
+                ]}
+                {...tailFormItemLayout}
+            >
+                <Checkbox>
+                    I have read the{' '}
+                    <a href="">agreement</a>
+                </Checkbox>
+            </Form.Item>
+            <Form.Item {...tailFormItemLayout}>
+                <Button
+                    type="primary"
+                    htmlType="submit"
+                >
                     회원가입
-                </button>
-            </form>
-        </div>
+                </Button>
+            </Form.Item>
+        </Form>
     );
 }
 

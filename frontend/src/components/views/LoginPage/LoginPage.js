@@ -8,17 +8,11 @@ import {
     Button,
     Checkbox,
 } from 'antd';
-import { Card } from 'antd';
-import styled from 'styled-components';
-
-const FormWrapper = styled(Card)`
-    min-width: 500px;
-    min-height: 500px;
-    text-align: center;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-`;
+import {
+    UserOutlined,
+    LockOutlined,
+} from '@ant-design/icons';
+import './LoginPage.css';
 
 function LoginPage(props) {
     const dispatch = useDispatch();
@@ -36,81 +30,94 @@ function LoginPage(props) {
             email: email,
             password: password,
         };
-        dispatch(loginUser(body)).then((res) => {
-            if (res.payload.loginSuccess) {
-                props.history.push('/');
-            } else {
-                alert('Error');
+        dispatch(loginUser(body)).then(
+            (res, err) => {
+                if (res.payload.loginSuccess) {
+                    props.history.push('/');
+                } else {
+                    alert('Error');
+                }
             }
-        });
-    };
-    const layout = {
-        labelCol: {
-            span: 8,
-        },
-        wrapperCol: {
-            span: 16,
-        },
-    };
-    const tailLayout = {
-        wrapperCol: {
-            offset: 8,
-            span: 16,
-        },
+        );
     };
 
     return (
-        <FormWrapper>
-            <Form
-                {...layout}
-                name="basic"
-                onFinish={onSubmit}
+        <Form
+            name="normal_login"
+            className="login-form"
+            initialValues={{ remember: true }}
+            onFinish={onSubmit}
+        >
+            <h2>로그인</h2>
+            <Form.Item
+                name="email"
+                rules={[
+                    {
+                        required: true,
+                        message:
+                            'Please input your Username!',
+                    },
+                ]}
             >
+                <Input
+                    value={email}
+                    onChange={onEmailHandler}
+                    prefix={
+                        <UserOutlined className="site-form-item-icon" />
+                    }
+                    placeholder="Email"
+                />
+            </Form.Item>
+            <Form.Item
+                name="password"
+                rules={[
+                    {
+                        required: true,
+                        message:
+                            'Please input your Password!',
+                    },
+                ]}
+            >
+                <Input
+                    value={password}
+                    onChange={onPasswordHandler}
+                    prefix={
+                        <LockOutlined className="site-form-item-icon" />
+                    }
+                    type="password"
+                    placeholder="Password"
+                />
+            </Form.Item>
+            <Form.Item>
                 <Form.Item
-                    label="Email"
-                    name="email"
-                    rules={[
-                        {
-                            required: true,
-                            message:
-                                'Please input your email!',
-                        },
-                    ]}
+                    name="remember"
+                    valuePropName="checked"
+                    noStyle
                 >
-                    <Input
-                        value={email}
-                        onChange={onEmailHandler}
-                    />
+                    <Checkbox>
+                        Remember me
+                    </Checkbox>
                 </Form.Item>
 
-                <Form.Item
-                    label="Password"
-                    name="password"
-                    rules={[
-                        {
-                            required: true,
-                            message:
-                                'Please input your password!',
-                        },
-                    ]}
+                <a
+                    className="login-form-forgot"
+                    href=""
                 >
-                    <Input.Password
-                        value={password}
-                        onChange={
-                            onPasswordHandler
-                        }
-                    />
-                </Form.Item>
-                <Form.Item {...tailLayout}>
-                    <Button
-                        type="primary"
-                        htmlType="submit"
-                    >
-                        로그인
-                    </Button>
-                </Form.Item>
-            </Form>
-        </FormWrapper>
+                    Forgot password
+                </a>
+            </Form.Item>
+            <Form.Item>
+                <Button
+                    type="primary"
+                    htmlType="submit"
+                    className="login-form-button"
+                >
+                    로그인
+                </Button>
+                Or{' '}
+                <a href="/register">회원가입</a>
+            </Form.Item>
+        </Form>
     );
 }
 

@@ -2,18 +2,24 @@ import React from 'react';
 import { useSelector } from 'react-redux';
 import { Menu } from 'antd';
 import { Link } from 'react-router-dom';
-import { AndroidFilled } from '@ant-design/icons/AndroidFilled';
+import { AppleFilled } from '@ant-design/icons';
+import './Nav.css';
 
-function Header() {
+function Nav() {
     const user = useSelector(
         (state) => state.user
     );
 
     if (user.userData && !user.userData.isAuth) {
         return (
-            <>
-                {/* <AndroidFilled twoToneColor="#eb2f96" /> */}
-
+            <div className="header">
+                <div className="logo">
+                    <AppleFilled
+                        style={{
+                            fontSize: '32px',
+                        }}
+                    />
+                </div>
                 <Menu
                     theme="Compact"
                     mode="horizontal"
@@ -38,11 +44,14 @@ function Header() {
                         </a>
                     </Menu.Item>
                 </Menu>
-            </>
+            </div>
         );
     } else {
         return (
             <div className="header">
+                <div className="icons-list">
+                    <AppleFilled />
+                </div>
                 <Menu
                     theme="Compact"
                     mode="horizontal"
@@ -61,4 +70,4 @@ function Header() {
     }
 }
 
-export default Header;
+export default Nav;

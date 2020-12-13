@@ -9,12 +9,12 @@ import RegisterPage from './components/views/RegisterPage/RegisterPage';
 import Auth from './hoc/auth';
 import { Row, Col } from 'antd';
 import 'antd/dist/antd.css';
-import Header from './components/views/Header/Header';
+import Nav from './components/views/Nav/Nav';
 
 function App() {
     return (
         <Router>
-            <Header />
+            <Nav />
             <Row gutter={8}>
                 <Col xs={24} md={6}></Col>
                 <Col xs={24} md={12}>
